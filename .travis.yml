@@ -1,0 +1,26 @@
+os: linux
+language: generic
+services:
+    - docker
+
+env:
+    global:
+        - secure: "spFsMqHYtaWgXI2ta+yZusvkgDzASZMluKAF/+mA2Sz1weuZIei0RVGxDx9FpIF5Q+RsATMmy7w8o5Ajwar2Nz0ox+X0qjNXNVhOacC+HN1GQh3vdOXSuTGVifwwx57JqQ4ZyUhFWABSDn+us+qajHkMMr6ruZud9ZZXdfZYVyJ7XQ2YztqulznEoIBOnf5hkqgVEp/TLyHtXXsW8mf8Gj4uelTatjlxIYsevvRJnmSQtYQB+yY7KPtpRumGVKahltYMGBdZO7MQm4XhxhlNanjQi2BN4lJQ6hy6bX9RqO62VR9UVCqZhMDZjVYWS8YZJDKHR7lmKsUBE/cH3fseYxpYh0zNs/ZFrNnOce+YIZrOfg71EezW6FfIVUupAN6lkUgvHz+HIZ/9mVcY8HXTwMmCpm8iMNrlX0ab3Jkv5bTDqanC0QezZPm9w+4O7MwkjAGqBQxYqHyCa8t3w7f8TfCPx4Iqetux3IuNj1oSOJxTZCjQ70LFAjiGMsahGPfi8axvb2ZtTg6FW+TuD2xcPEYDzQSlq9ZIbPB8kEgOUJdXqbdWuF+Bi119LH9/PnrUiA7p17iNdJwanIeyMummVtCR9Xo/CJK+DZg49e4vfd4MtyW3Tlqlr3jkyK+JN1BDjPevaMqAqp+8aedkjm/CeMT03W8yP4LhTh9dP9yw42k="
+        - secure: "oCVwV+tIs8OXysjP8Ah8Pwf3mAXc59VwvvC9vMQfqI1rCFm8bP1BlX/vNsk9yw+xpRoJLKnfPMtDT2jqBEtfm2QqeLyOLm7XPzf+i6aOh5/+1/G+v53vmNEBU1kFkxIEKIi0ixh8WH5THosAyxIZ8DX6vUODW0FRQrixRy/teJv2Ri5ZBVyxAypPDCeWMDzHIsBmfiqrR7tN1HpJgGYyfqDHzOSYPDrP775jJAuOLnes2HMdhJI8xvQ9jijTy8Cc/BmMkRk7GMbkgNMEL3YPPN5ik5CwQLl2Py766Wl6bkzPfFcCNddR23qqM9mdp/AkznvxB5TTWtafAydea0KA98uP3vdVn3Asx6Mioagp7L82q2px/OQ9/s/IXJIxW//n7SRjWmIa+dyr0nQ9oolygDRvsZrTn5AsZNVn9BNj9MYAY+9PewqQvZNOaU3YDJE9oa2j9UXXhg5zF3BdUalJMQx1UUOZ90lyOuWh/9Blf77hQyeQ5mRME+ySLKx4bxkv3koVDv1gyaGcY+5TYdhedntnXkcgpPRNuQM1fwVVc+fCkqraa1wT8BPB5C6Ucik6jPmFYHD42uFrypsjnBshtfLeZ1B9A/dYNrRlvMY0woOmcPalkZMSVws+BVW/K7wGVcq7XUqHAMwnJ+NrdWw7C9jlpQgxfIuBz/x3Kd3Xkrs="
+        - secure: "p8STnZ4rut/BxYA9pidiSQ1QwZO74dgAxlsvzEmmlOrJ25lfm/RUEfmL9tWlPj67FrxYuxlzEduAg+Gz1A67XmiWQOSnQKQuGRSYSfT0015mHkpOL+B8EX2aqBUdGGFofiZ7QLTitdCE7nNPSPIl/pIm/xv/B0slHRnXYVLyvNDRUjF2JWOvuJyE6S4rBo+TNQsxdF9DyzZt3Ml/uXWmgEPkUVWntg329MeJicSkZ5DE5kD7zXAnQMkBj4t+j7LUu+1VFD1Yq3A74IcrwuXQba6D5PbgozIJZjb7SGtrnOkf2Y9Qrx3mKpFdFNGEm57ABCjlZD4syXGqm+6427Ow8YgmlVEdhg1Teyxhomy0WbDIiL1fTI1tVaSEk0aXBliaY5R2rIG+8/JFIdRUSjQ4LPFjeVFi2E/KoEidQ6+E7nmjScibJvLO655UxtsUPT2y+wITW27dvcrse2Tzf+VsUR2BzImtSEob+hGwGvJjdR+/3UZXsyFyQ4URjhfB57eyTaN8jjeGXPry6A3Oqxu8RfivxY3Wvju/6iI5+O5SOd9lee7bIFSb23xFmVICRsZeDGslpztDTZ/KAK0QWklAQgQ1Ht46XMcnG1o/ELJ7F4bq1dxiTHgpEEX7Bu0W7T6rSrNuIiEfTiciAM5G2cVwR70DRbX0PMVvOq4iyCgphLk="
+
+script:
+    - docker build -t arcnmx/arch-mingw-w64:latest .
+
+before_deploy:
+    - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+
+after_deploy:
+    - docker push arcnmx/arch-mingw-w64
+
+deploy:
+    provider: script
+    script: "true"
+    on:
+        tags: true
+        all_branches: true
