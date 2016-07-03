@@ -14,7 +14,7 @@ ADD mingw-w64-gcc-dwarf.patch /root/mingw-w64-gcc.patch
 RUN abs community/mingw-w64-gcc \
 	&& cd /var/abs/community/mingw-w64-gcc \
 	&& patch PKGBUILD /root/mingw-w64-gcc.patch \
-	&& env EUID=1 makepkg -cid --noconfirm --noprogressbar \
+	&& env EUID=1 makepkg -cid --noconfirm --noprogressbar 2>&1 | sed '1~4!d' \
 	&& rm -rf /var/abs/community/mingw-w64-gcc
 
 RUN mkdir /root/rust && cd /root/rust \
