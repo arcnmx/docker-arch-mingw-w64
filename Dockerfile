@@ -19,11 +19,12 @@ RUN abs community/mingw-w64-gcc \
 
 RUN mkdir /root/rust && cd /root/rust \
 	&& curl -fsSL https://aur.archlinux.org/cgit/aur.git/snapshot/rust-nightly-bin.tar.gz | tar xz --strip-components=1 \
-	&& env EUID=1 makepkg -cis --noconfirm --noprogressbar \
+	&& env EUID=1 makepkg -cis --noconfirm --noprogressbar --skippgpcheck \
 	&& mv PKGBUILD /root/rust-nightly-bin \
 	&& rm -rf /root/rust
 
 ADD rust-std-nightly-windows /root/rust-std-nightly-windows/PKGBUILD.template
 RUN cd /root/rust-std-nightly-windows \
 	&& (grep ^_date= /root/rust-nightly-bin; grep ^pkgver= /root/rust-nightly-bin; cat PKGBUILD.template) > PKGBUILD \
-	&& env EUID=1 makepkg -cis --noconfirm --noprogressbar && rm -rf /root/rust-std-nightly-windows
+	&& env EUID=1 makepkg -cis --noconfirm --noprogressbar --skippgpcheck \
+	&& rm -rf /root/rust-std-nightly-windows
