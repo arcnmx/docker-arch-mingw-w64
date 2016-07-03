@@ -7,6 +7,7 @@ RUN pacman -Su --noconfirm lz4 base-devel abs \
 
 RUN pacman -S --noconfirm mingw-w64-binutils mingw-w64-crt mingw-w64-headers mingw-w64-winpthreads \
 	&& find /var/cache/pacman/pkg -mindepth 1 -delete
+RUN echo MAKEFLAGS=-j4 >> /etc/makepkg.conf
 
 ADD mingw-w64-gcc-dwarf.patch /root/mingw-w64-gcc.patch
 RUN abs community/mingw-w64-gcc \
