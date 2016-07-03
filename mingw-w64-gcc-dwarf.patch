@@ -1,0 +1,41 @@
+--- /var/abs/community/mingw-w64-gcc/PKGBUILD	2016-07-02 21:22:19.578063738 -0400
++++ build/mingw-dwarf/mingw-w64-gcc/PKGBUILD	2016-07-02 21:56:14.543990340 -0400
+@@ -18,7 +18,6 @@
+ depends=('zlib' 'libmpc'
+ 	 'mingw-w64-crt' 'mingw-w64-binutils' 'mingw-w64-winpthreads'
+ 	 'mingw-w64-headers')
+-makedepends=("gcc-ada=${pkgver}")
+ #checkdepends=('dejagnu') # Windows executables could run on Arch through bin_mft and Wine
+ optdepends=()
+ provides=('mingw-w64-gcc-base')
+@@ -54,14 +53,19 @@
+ build() {
+   for _target in ${_targets}; do
+     mkdir -p ${srcdir}/gcc-build-${_target} && cd ${srcdir}/gcc-build-${_target}
++	if [ ${_target} = i686-w64-mingw32 ]; then
++		exceptions="--disable-sjlj-exceptions --with-dwarf2 --enable-dw2-exceptions"
++	else
++		exceptions="--disable-dw2-exceptions"
++	fi
+ 
+     ${srcdir}/${_basedir}/configure --prefix=/usr --libexecdir=/usr/lib \
+         --target=${_target} \
+-        --enable-languages=c,lto,c++,objc,obj-c++,fortran,ada \
++        --enable-languages=c,lto,c++ \
+         --enable-shared --enable-static \
+         --enable-threads=posix --enable-fully-dynamic-string --enable-libstdcxx-time=yes \
+         --with-system-zlib --enable-cloog-backend=isl \
+-        --enable-lto --disable-dw2-exceptions --enable-libgomp \
++        --enable-lto $exceptions --enable-libgomp \
+         --disable-multilib --enable-checking=release
+     make all
+   done
+@@ -73,7 +77,7 @@
+     make DESTDIR=${pkgdir} install
+     ${_target}-strip ${pkgdir}/usr/${_target}/lib/*.dll
+     strip ${pkgdir}/usr/bin/${_target}-*
+-    strip ${pkgdir}/usr/lib/gcc/${_target}/${pkgver}/{cc1*,collect2,gnat1,f951,lto*}
++    strip ${pkgdir}/usr/lib/gcc/${_target}/${pkgver}/{cc1*,collect2,lto*}
+     ln -s ${_target}-gcc $pkgdir/usr/bin/${_target}-cc
+     # mv dlls
+     mkdir -p $pkgdir/usr/${_target}/bin/
