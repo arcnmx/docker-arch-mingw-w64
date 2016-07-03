@@ -1,0 +1,36 @@
+# Contributor: micsproul at large search corporation's mail service.
+# Contributor: Mohammad Alsaleh <msal@tormail.org>
+# Maintainer: Steven Allen <steven@stebalien.com>
+
+pkgname=rust-std-nightly-windows
+pkgrel=1
+arch=('i686' 'x86_64')
+pkgdesc='Fast, concurrent, safe. The Rust programming language and its package manager, Cargo.'
+url='https://www.rust-lang.org/'
+license=('MIT' 'Apache' 'custom')
+source=(
+	"rust-std-nightly-${_date}-i686-pc-windows-gnu.tar.gz.asc::https://static.rust-lang.org/dist/${_date}/rust-std-nightly-i686-pc-windows-gnu.tar.gz.asc"
+	"rust-std-nightly-${_date}-i686-pc-windows-gnu.tar.gz::https://static.rust-lang.org/dist/${_date}/rust-std-nightly-i686-pc-windows-gnu.tar.gz"
+	"rust-std-nightly-${_date}-x86_64-pc-windows-gnu.tar.gz.asc::https://static.rust-lang.org/dist/${_date}/rust-std-nightly-x86_64-pc-windows-gnu.tar.gz.asc"
+	"rust-std-nightly-${_date}-x86_64-pc-windows-gnu.tar.gz::https://static.rust-lang.org/dist/${_date}/rust-std-nightly-x86_64-pc-windows-gnu.tar.gz"
+)
+
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
+validpgpkeys=('108F66205EAEB0AAA8DD5E1C85AB96E6FA1BE5FE')
+options=(staticlibs !strip)
+
+package() {
+	ARCHS="i686 x86_64"
+	PLATFORMS="gnu"
+	for arch in $ARCHS; do
+		for plat in $PLATFORMS; do
+			(
+				cd rust-std-nightly-${arch}-pc-windows-${plat}
+				./install.sh --disable-ldconfig --destdir="${pkgdir}" --prefix=/usr/
+			)
+		done
+	done
+
+    # Remove cruft.
+    rm "${pkgdir}/usr/lib/rustlib/"{manifest-*,install.log,uninstall.sh,components,rust-installer-version}
+}
